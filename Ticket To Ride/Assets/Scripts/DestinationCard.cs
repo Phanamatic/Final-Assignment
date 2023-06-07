@@ -1,13 +1,9 @@
-public class DestinationCard
-{
-    public string StartCity { get; private set; }
-    public string EndCity { get; private set; }
-    public int PointValue { get; private set; }
+using UnityEngine;
 
-    public DestinationCard(string startCity, string endCity, int pointValue)
-    {
-        StartCity = startCity;
-        EndCity = endCity;
-        PointValue = pointValue;
-    }
+[CreateAssetMenu(fileName = "New Destination Card", menuName = "Cards/DestinationCard")]
+public class DestinationCard : ScriptableObject
+{
+    public string startCity;
+    public string endCity;
+    public int points;
 }

@@ -1,22 +1,9 @@
-public class TrainCard
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "New Train Card", menuName = "Cards/TrainCard")]
+public class TrainCard : ScriptableObject
 {
-    public enum CardColor
-    {
-        Red,
-        Blue,
-        Green,
-        Yellow,
-        Black,
-        White,
-        Pink,
-        Orange,
-        Locomotive // wild card
-    }
-
-    public CardColor Color { get; private set; }
-
-    public TrainCard(CardColor color)
-    {
-        Color = color;
-    }
+    public string cardType;
+    public Color cardColor;
+    public int count;
 }
