@@ -8,6 +8,8 @@ public class Player
     public List<TrainCard> TrainCards { get; private set; }
     public List<DestinationCard> DestinationCards { get; private set; }
 
+    public List<Routes> RoutesClaimed { get; private set; }
+
     public Player(int playerID)
     {
         PlayerID = playerID;
