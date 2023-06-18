@@ -6,4 +6,5 @@ public class DestinationCard : ScriptableObject
     public string startCity;
     public string endCity;
     public int points;
+    public Texture2D image;
 }

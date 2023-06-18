@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameController : MonoBehaviour
 {
     public static GameController Instance { get; private set; }
+
+    public int NumberOfPlayers { get; set; }
 
     public List<Player> players;
 
@@ -21,3 +23,4 @@ public class GameController : MonoBehaviour
         }
     }
 }
+

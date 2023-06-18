@@ -25,15 +25,16 @@ public class MainMenuController : MonoBehaviour
 
     public void StartGame()
     {
-        NumberOfPlayers = playerSelectionDropdown.value + 2;  // DropDown value starts at 0 so we add 2 for number of players
+        GameController.Instance.NumberOfPlayers = playerSelectionDropdown.value + 2;  // DropDown value starts at 0 so we add 2 for number of players
 
-        // Initialize players
         GameController.Instance.players = new List<Player>();
 
-        for (int i = 0; i < NumberOfPlayers; i++)
-        {
-            GameController.Instance.players.Add(new Player(i + 1));
-        }
+    for (int i = 0; i < GameController.Instance.NumberOfPlayers; i++)
+    {
+    Player newPlayer = new Player($"Player {i + 1}", i + 1);
+    GameController.Instance.players.Add(newPlayer);
+    }
+
 
         SceneManager.LoadScene("Game"); 
     }
