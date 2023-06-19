@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fb7c042f0832404c86797c924aab5be, type: 3}
-  m_Name: "Montr\xE9alto New Orleans"
+  m_Name: Winnipeg to Little Rock
   m_EditorClassIdentifier: 
-  startCity: 
-  endCity: 
-  points: 0
-  cardImage: {fileID: 0}
+  startCity: Winnipeg
+  endCity: Little Rock
+  points: 11
+  image: {fileID: 0}

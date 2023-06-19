@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb7c042f0832404c86797c924aab5be, type: 3}
   m_Name: Calgary to Salt Lake City
   m_EditorClassIdentifier: 
-  startCity: 
-  endCity: 
-  points: 0
-  cardImage: {fileID: 0}
+  startCity: Calgary
+  endCity: Salt Lake City
+  points: 7
+  image: {fileID: 0}

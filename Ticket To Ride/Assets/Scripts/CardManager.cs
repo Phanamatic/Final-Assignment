@@ -17,6 +17,8 @@ public class CardManager : MonoBehaviour
 
     public GamePlayController gamePlayController;
 
+    private bool isFirstUpdate = true;
+
     private void Awake()
     {
     trainCardDeck = new CardDeck<TrainCard>(new List<TrainCard>());
@@ -45,7 +47,7 @@ public class CardManager : MonoBehaviour
         // Debugging
         Debug.Log("Start method in CardManager called. OfferPile count: " + OfferPile.Count);
     }
-
+    
     public TrainCard DrawFromDeck()
     {
         return trainCardDeck.DrawCard();

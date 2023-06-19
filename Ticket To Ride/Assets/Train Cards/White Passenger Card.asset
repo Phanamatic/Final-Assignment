@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e5e7e05b043114f916922f3275e2e6, type: 3}
   m_Name: White Passenger Card
   m_EditorClassIdentifier: 
-  cardType: 
+  cardType: Passenger
   cardColor: {r: 0, g: 0, b: 0, a: 0}
-  cardImage: {fileID: 0}
+  cardColorString: White
+  count: 12
+  image: {fileID: 2800000, guid: cdc6594b445c8fb4ab8d7c8a8bb57e43, type: 3}

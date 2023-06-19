@@ -133,8 +133,21 @@ public class GamePlayController : MonoBehaviour
     // Spawn new cards
     for (int i = 0; i < cardManager.OfferPile.Count; i++)
     {
+
+        if (cardPrefab == null)
+        {
+            Debug.LogError("Card prefab is null!");
+            continue;
+        }
+
         GameObject cardObject = Instantiate(cardPrefab, cardParent.transform);
         
+        if (cardObject == null)
+        {
+            Debug.LogError("Failed to instantiate card object!");
+            continue;
+        }
+
         // Set the card's image
         cardObject.GetComponent<Image>().sprite = Sprite.Create(cardManager.OfferPile[i].image, new Rect(0.0f, 0.0f, cardManager.OfferPile[i].image.width, cardManager.OfferPile[i].image.height), new Vector2(0.5f, 0.5f), 100.0f);
 

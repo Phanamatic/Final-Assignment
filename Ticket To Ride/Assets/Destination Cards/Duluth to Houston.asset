@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3e5e7e05b043114f916922f3275e2e6, type: 3}
+  m_Script: {fileID: 11500000, guid: 4fb7c042f0832404c86797c924aab5be, type: 3}
   m_Name: Duluth to Houston
   m_EditorClassIdentifier: 
-  cardType: 
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
-  cardImage: {fileID: 0}
+  startCity: Duluth
+  endCity: Houston
+  points: 8
+  image: {fileID: 0}

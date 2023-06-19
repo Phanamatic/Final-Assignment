@@ -5,6 +5,7 @@ public class TrainCard : ScriptableObject
 {
     public string cardType;
     public Color cardColor;
+    public string cardColorString;
     public int count;
     public Texture2D image;
 
