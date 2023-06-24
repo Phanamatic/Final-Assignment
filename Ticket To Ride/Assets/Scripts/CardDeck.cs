@@ -20,13 +20,15 @@ public class CardDeck<T> where T : ScriptableObject
 
     public void Shuffle()
     {
-        for (int t = 0; t < cards.Count; t++ )
-        {
-            T tmp = cards[t];
-            int r = Random.Range(t, cards.Count);
-            cards[t] = cards[r];
-            cards[r] = tmp;
-        }
+        int n = cards.Count;  
+        while (n > 1) 
+        {  
+        n--;  
+        int k = Random.Range(0, n + 1);  
+        T value = cards[k];  
+        cards[k] = cards[n];  
+        cards[n] = value;  
+        } 
     }
 
     public T DrawCard()

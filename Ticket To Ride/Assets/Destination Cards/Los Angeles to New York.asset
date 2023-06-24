@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Los Angeles
   endCity: New York
   points: 21
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 96d84a70d52f5944db77c4aa462d7679, type: 3}

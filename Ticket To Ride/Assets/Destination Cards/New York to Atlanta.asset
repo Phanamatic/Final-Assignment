@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: New York
   endCity: Atlanta
   points: 6
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: cc51b30cb9c425f47a842a5454b87aec, type: 3}

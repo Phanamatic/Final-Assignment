@@ -7,7 +7,7 @@ public class TrainCard : ScriptableObject
     public Color cardColor;
     public string cardColorString;
     public int count;
-    public Texture2D image;
+    public Sprite image;
 
     public bool IsLocomotive
     {

@@ -1,4 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class Player
 {
@@ -6,8 +10,15 @@ public class Player
     public int PlayerID { get; private set; }
     public int Score { get; set; }
     public int TrainCarsLeft { get; set; }
-    public List<TrainCard> TrainCards { get; private set; }
-    public List<DestinationCard> DestinationCards { get; private set; }
+    public List<TrainCard> TrainCards { get; set; }
+    public List<DestinationCard> DestinationCards { get; set; }
+    public int DrawsLeft { get; set; }
+    public bool HasDrawnFirstCard { get; set; }
+
+    public GameObject TrainCardHandArea; 
+    public GameObject DestinationCardHandArea; 
+
+    public bool hasFinishedInitialTurn;
 
     public Player(string playerName, int playerID)
     {
@@ -17,6 +28,7 @@ public class Player
         TrainCarsLeft = 45;
         TrainCards = new List<TrainCard>();
         DestinationCards = new List<DestinationCard>();
+        DrawsLeft = 2;
     }
 
     public void AddTrainCard(TrainCard card)
@@ -29,3 +41,4 @@ public class Player
         DestinationCards.Add(card);
     }
 }
+

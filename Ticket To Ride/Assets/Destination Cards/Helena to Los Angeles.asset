@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Helena
   endCity: Los Angeles
   points: 8
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: bc4bdea112a76d745a4cd2444d46dcf9, type: 3}

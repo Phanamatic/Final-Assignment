@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Montrealto
   endCity: Atlanta
   points: 9
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 7b1ecaf8c694cb444b7d3f710c79346a, type: 3}

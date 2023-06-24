@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Duluth
   endCity: El Paso
   points: 10
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: 8ce6ccc708ebf0041b820c7fd3d76910, type: 3}

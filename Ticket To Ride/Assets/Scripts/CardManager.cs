@@ -3,82 +3,92 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 
-
 public class CardManager : MonoBehaviour
 {
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     [SerializeField] private List<TrainCard> uniqueTrainCards;
     [SerializeField] private List<DestinationCard> destinationCards;
-
-    private CardDeck<TrainCard> trainCardDeck;
-    private CardDeck<DestinationCard> destinationCardDeck;
-
     public List<TrainCard> OfferPile { get; private set; } = new List<TrainCard>();
+    public CardDeck<TrainCard> trainCardDeck;
+    public CardDeck<DestinationCard> destinationCardDeck;
+    public GamePlayController gamePlayController;
     private const int OfferSize = 5;
 
-    public GamePlayController gamePlayController;
-
-    private bool isFirstUpdate = true;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void Awake()
     {
-    trainCardDeck = new CardDeck<TrainCard>(new List<TrainCard>());
-    destinationCardDeck = new CardDeck<DestinationCard>(destinationCards);
+        trainCardDeck = new CardDeck<TrainCard>(new List<TrainCard>());
+        destinationCardDeck = new CardDeck<DestinationCard>(destinationCards);
 
-    foreach (TrainCard card in uniqueTrainCards)
-    {
-        trainCardDeck.AddCard(card, card.count);
+        foreach (TrainCard card in uniqueTrainCards)
+        {
+            trainCardDeck.AddCard(card, card.count);
+        }
     }
-    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void Start()
     {
+    OfferPile = new List<TrainCard>();
+
     trainCardDeck.Shuffle();
     destinationCardDeck.Shuffle();
 
     for (int i = 0; i < OfferSize; i++)
-        {
-            OfferPile.Add(trainCardDeck.DrawCard());
-        }
-
-        CheckAndReplaceOfferPile();
-        gamePlayController.PopulateOfferCards();
-        
-        
-        // Debugging
-        Debug.Log("Start method in CardManager called. OfferPile count: " + OfferPile.Count);
+    {
+        OfferPile.Add(trainCardDeck.DrawCard());
     }
+
+    CheckAndReplaceOfferPile();
+    gamePlayController.PopulateOfferCards();
+
+    Debug.Log("Start method in CardManager called. OfferPile count: " + OfferPile.Count);
+    }
+
     
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public TrainCard DrawFromDeck()
     {
         return trainCardDeck.DrawCard();
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public TrainCard TakeFromOffer(int offerIndex)
     {
         TrainCard card = OfferPile[offerIndex];
-        OfferPile[offerIndex] = trainCardDeck.DrawCard();  // Replace the card taken from the offer pile
+        OfferPile[offerIndex] = trainCardDeck.DrawCard();
 
         CheckAndReplaceOfferPile();
-
+        gamePlayController.PopulateOfferCards();
         return card;
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void CheckAndReplaceOfferPile()
     {
-        if (OfferPile.Count(card => card.IsLocomotive) >= 3)
+    if (OfferPile.Count(card => card.IsLocomotive) >= 3)
+    {
+        for (int i = 0; i < OfferSize; i++)
         {
-            // Replace all cards in the offer pile
-            for (int i = 0; i < OfferSize; i++)
-            {
-                OfferPile[i] = trainCardDeck.DrawCard();
-            }
+            OfferPile[i] = trainCardDeck.DrawCard();
         }
+    }
 
-        gamePlayController.PopulateOfferCards();
-
-    // Debugging
     Debug.Log("CheckAndReplaceOfferPile method in CardManager called. OfferPile count: " + OfferPile.Count);
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public DestinationCard DrawDestinationCard()
+    {
+    return destinationCardDeck.DrawCard();
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
