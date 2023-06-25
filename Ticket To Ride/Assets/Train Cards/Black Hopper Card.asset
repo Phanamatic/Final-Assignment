@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: Hopper
   cardColor: {r: 0, g: 0, b: 0, a: 0}
-  cardColorString: Black
+  cardColorString: black
   count: 12
   image: {fileID: 21300000, guid: 770d0c0c4892faa4eab46bfe3e673234, type: 3}

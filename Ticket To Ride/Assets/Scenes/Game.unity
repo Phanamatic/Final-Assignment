@@ -678,8 +678,10 @@ MonoBehaviour:
   destinationCardChoiceConfirmationPrompt: {fileID: 1389317452}
   offeredDestinationCards: []
   chosenDestinationCards: []
+  dropDown: {fileID: 1957854591}
   routechoosedropdown: {fileID: 1957854589}
   claimroutebutton: {fileID: 1941552468}
+  scoreText: {fileID: 1912680063}
 --- !u!224 &174484469
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12021,7 +12023,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -12449,8 +12451,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 681.81, y: -392.6}
-  m_SizeDelta: {x: 173.02, y: 43.67}
+  m_AnchoredPosition: {x: 682.01, y: -391.4}
+  m_SizeDelta: {x: 173.41, y: 46.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1957854591
 MonoBehaviour:
@@ -12510,7 +12512,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 174484468}
+        m_TargetAssemblyTypeName: GamePlayController, Assembly-CSharp
+        m_MethodName: DropDownItemSelected
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1957854591}
+          m_ObjectArgumentAssemblyTypeName: TMPro.TMP_Dropdown, Unity.TextMeshPro
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &1957854592
 MonoBehaviour:

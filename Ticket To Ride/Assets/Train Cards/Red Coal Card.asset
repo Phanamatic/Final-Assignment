@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardType: Coal
   cardColor: {r: 0, g: 0, b: 0, a: 0}
-  cardColorString: Red
+  cardColorString: red
   count: 12
   image: {fileID: 21300000, guid: cb32c729997d87e42b44e803e96714d3, type: 3}

@@ -29,10 +29,16 @@ public class GamePlayController : MonoBehaviour
     public List<DestinationCard> offeredDestinationCards = new List<DestinationCard>();
     public List<DestinationCard> chosenDestinationCards = new List<DestinationCard>();
 
+    public Board board;
+    public RouteManager obj = new RouteManager();
+    public TMP_Dropdown dropDown;
+    public List<RouteBase> data = new List<RouteBase>();
+    
+
     public GameObject routechoosedropdown;
     public GameObject claimroutebutton;
 
-
+    public TMP_Text scoreText;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +51,8 @@ public class GamePlayController : MonoBehaviour
         UpdateTurnUI();
 
         Debug.Log("Awake method in GamePlayController called");
+
+        
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +121,14 @@ public class GamePlayController : MonoBehaviour
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public void UpdateScoreUI(Player p)
+    {
+        string score = p.CalculateScore().ToString();
+        scoreText.text = score;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public bool AllPlayersFinishedInitialTurn()
     {
     foreach (Player player in players)
@@ -136,6 +152,7 @@ public class GamePlayController : MonoBehaviour
         UpdateCardButtons();
 
         Debug.Log("DrawTrainCard method in GamePlayController called");
+
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,19 +247,55 @@ public class GamePlayController : MonoBehaviour
     }
     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
 
     public void ClaimRoute()
     {
-    routechoosedropdown.SetActive(false);
-    claimroutebutton.SetActive(false);
-    
-    //Ivy will add systems here
+         routechoosedropdown.SetActive(false);
+         claimroutebutton.SetActive(false);
 
-    NextTurn();
+        //Ivy will add systems here
+        Player current = players[currentPlayerIndex];
+        int cardsleft = current.TrainCards.Count;
+        int carsleft = current.TrainCarsLeft;
+        bool destn = false;
+
+        DropDownItemSelected(dropDown);
+        dropDown.onValueChanged.AddListener(delegate { DropDownItemSelected(dropDown); });
+
+        void DropDownItemSelected(TMP_Dropdown dropdown)
+        {
+
+            int index = dropdown.value;
+            obj.ClaimRoute(data[index], current);
+            Debug.Log(obj.ClaimRoute(data[index], current) + " " + "RouteName:" + data[index].getRouteName());
+
+            if(obj.ClaimRoute(data[index], current)== true)
+            {
+                current.RoutesClaimed.Add(data[index]);
+                current.RoutesConnectedClaimed = obj.ConnectedRoutes(current, data[index]);
+                destn = obj.DestinationTicketAcheived(current, current.RoutesConnectedClaimed);
+                UpdateScoreUI(current);
+
+               // current.ConnectedCities.Add(data[index].getStart());
+               // current.ConnectedCities.Add(data[index].getEnd());
+                cardsleft = cardsleft - data[index].getNodes();
+                carsleft--;//do a check if there are less than 2 cars, only one more next turn and then game must end...use a while loop
+
+                NextTurn();
+            }
+            else
+            {
+                NextTurn();
+            }
+           
+        }
+   
     }
+    
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void DrawTrainCardFromDeck()
     {
@@ -443,31 +496,62 @@ public class GamePlayController : MonoBehaviour
 
     public void RouteClaimChosen()
     {
+        
+        routechoosedropdown.SetActive(true);
+       
+        claimroutebutton.SetActive(true);
 
-    routechoosedropdown.SetActive(true);
-    claimroutebutton.SetActive(true);
-    actionPanel.SetActive(false);
+        actionPanel.SetActive(false);
+
+
+        dropDown = dropDown.transform.GetComponent<TMP_Dropdown>();
+
+        dropDown.ClearOptions();
+
+        //creates a new list
+        board = new Board();
+
+        for (int i = 0; i < board.Routes.GeneralList.Count; i++)
+        {
+            data.Add(board.Routes.GeneralList[i]);
+        }
+
+        foreach (RouteBase t in data)
+        {
+            dropDown.options.Add(new TMP_Dropdown.OptionData() { text = t.getRouteName() });
+        }
+
+      
+
+
+
     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void StartGame() 
     {
+        
     cardManager.destinationCardDeck.Shuffle();
     cardManager.trainCardDeck.Shuffle();
 
     foreach (Player player in players)
     {
+        
         for (int i = 0; i < 4; i++)
         {
             player.AddTrainCard(cardManager.trainCardDeck.DrawCard());
+            RouteClaimChosen();
         }
     }
-
+        
     for (int i = 0; i < players.Count; i++)
     {
+        
         players[i].hasFinishedInitialTurn = false;
         currentPlayerIndex = i;
+        
+
         NextTurn();
     }
 
