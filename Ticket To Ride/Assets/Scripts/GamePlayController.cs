@@ -40,6 +40,7 @@ public class GamePlayController : MonoBehaviour
     public GameObject claimroutebutton;
 
     public TMP_Text scoreText;
+    public TMP_Text carsText;
 
     public TextMeshProUGUI[] startCityTexts;
     public TextMeshProUGUI[] endCityTexts;
@@ -144,15 +145,22 @@ public class GamePlayController : MonoBehaviour
     }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void UpdateScoreUI(Player p)
     {
-        string score = p.CalculateScore().ToString();
+        int scoreint = p.CalculateScore();
+        string score = scoreint.ToString();
         scoreText.text = score;
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void UpdateTrainCars(Player p)
+    {
+        //string cars = p.RemoveTrainCars().ToString();
+        //carsText.text = cars;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public bool AllPlayersFinishedInitialTurn()
     {
@@ -339,48 +347,53 @@ public class GamePlayController : MonoBehaviour
 
     public void ClaimRoute()
     {
-         routechoosedropdown.SetActive(false);
-         claimroutebutton.SetActive(false);
-
-        //Ivy will add systems here
-        Player current = players[currentPlayerIndex];
-        int cardsleft = current.TrainCards.Count;
-        int carsleft = current.TrainCarsLeft;
-        bool destn = false;
+        routechoosedropdown.SetActive(false);
+        claimroutebutton.SetActive(false);
 
         DropDownItemSelected(dropDown);
         dropDown.onValueChanged.AddListener(delegate { DropDownItemSelected(dropDown); });
 
-        void DropDownItemSelected(TMP_Dropdown dropdown)
-        {
 
-            int index = dropdown.value;
-            obj.ClaimRoute(data[index], current);
-            Debug.Log(obj.ClaimRoute(data[index], current) + " " + "RouteName:" + data[index].getRouteName());
-
-            if(obj.ClaimRoute(data[index], current)== true)
-            {
-                current.RoutesClaimed.Add(data[index]);
-                current.RoutesConnectedClaimed = obj.ConnectedRoutes(current, data[index]);
-                destn = obj.DestinationTicketAcheived(current, current.RoutesConnectedClaimed);
-                UpdateScoreUI(current);
-
-               // current.ConnectedCities.Add(data[index].getStart());
-               // current.ConnectedCities.Add(data[index].getEnd());
-                cardsleft = cardsleft - data[index].getNodes();
-                carsleft--;//do a check if there are less than 2 cars, only one more next turn and then game must end...use a while loop
-
-                NextTurn();
-            }
-            else
-            {
-                NextTurn();
-            }
-           
-        }
-   
     }
-    
+    void DropDownItemSelected(TMP_Dropdown dropdown)
+    {
+        Player current = players[currentPlayerIndex];
+
+        int carsleft = current.TrainCarsLeft;
+
+        bool destn = false;
+        bool claim = false;
+
+
+        int index = dropdown.value;
+        claim = obj.ClaimRoute(data[index], current);
+        Debug.Log(claim + " " + "RouteName:" + data[index].getRouteName());
+
+        if (claim == true)
+        {
+            current.RoutesClaimed.Add(data[index]);
+            current.RoutesConnectedClaimed = obj.ConnectedRoutes(current, data[index]);
+            destn = obj.DestinationTicketAcheived(current, current.RoutesConnectedClaimed);
+
+            UpdateScoreUI(current);
+            UpdateTrainCars(current);
+
+            current.ConnectedCities.Add(data[index].getStart());
+            current.ConnectedCities.Add(data[index].getEnd());
+
+            obj.GeneralList.Add(data[index]);
+
+            data.Remove(data[index]);//remove from dropdown list whe a route is claimed 
+            claim = false;
+            NextTurn();
+        }
+        else
+        {
+            NextTurn();
+        }
+
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -607,13 +620,13 @@ public class GamePlayController : MonoBehaviour
     destinationCardChoiceConfirmButton.interactable = chosenDestinationCards.Count >= 1;
     }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void RouteClaimChosen()
     {
-        
+
         routechoosedropdown.SetActive(true);
-       
+
         claimroutebutton.SetActive(true);
 
         actionPanel.SetActive(false);
@@ -623,9 +636,6 @@ public class GamePlayController : MonoBehaviour
 
         dropDown.ClearOptions();
 
-        //creates a new list
-        board = new Board();
-
         for (int i = 0; i < board.Routes.GeneralList.Count; i++)
         {
             data.Add(board.Routes.GeneralList[i]);
@@ -633,18 +643,56 @@ public class GamePlayController : MonoBehaviour
 
         foreach (RouteBase t in data)
         {
-            dropDown.options.Add(new TMP_Dropdown.OptionData() { text = t.getRouteName() });
+            dropDown.options.Add(new TMP_Dropdown.OptionData() { text = t.getRouteName() + " ----- " + t.getColour() });
         }
 
 
     }
 
+    /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+    public int getLongestRoute(Player player)
+    {
+
+        Player highestPlayer;
+        int highestVal = 0;
+
+        foreach (Player p in players)
+        {
+            int routeCheck = getLongestRoute(player);
+            if (highestVal < routeCheck)
+            {
+                highestVal = routeCheck;
+                highestPlayer = player;
+                return highestVal;
+            }
+        }
+
+        return 0;
+    }
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /* public bool checkEndGame()
+    {
+        Player current = players[currentPlayerIndex];
+        if (current.TrainCarsLeft < 2)
+        {
+            NextTurn();
+            return true;
+        }
+
+        return false;
+
+    }*/
+  
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     public void StartGame() 
     {
-        
-    cardManager.destinationCardDeck.Shuffle();
+        board = new Board();
+        cardManager.destinationCardDeck.Shuffle();
     cardManager.trainCardDeck.Shuffle();
 
     foreach (Player player in players)

@@ -23,9 +23,17 @@ public class RouteManager
 
     public bool ClaimRoute(RouteBase route, Player player)//add a player parameter as well and a traincard colour
     {
+        Debug.Log("firstTime Looping....");
+        bool firstCheck = false;
+        bool secondCheck = false;
+        bool thirdCheck = false;
+        int x = route.getNodes();//---loop x times to remove x number of train cards
+        string y = player.TrainCards[0].cardColorString;//--- the pos is equal to the index of groupbycol counter
+        bool[] canRemove = new bool[player.TrainCards.Count];
+
 
         #region CheckInGeneralList
-        for(int i =0; i<GeneralList.Count; i++)
+        for (int i = 0; i < GeneralList.Count; i++)
         {
             if (route == GeneralList[i])
             {
@@ -38,57 +46,63 @@ public class RouteManager
 
         #region Check Nodes To TrainCard by Colour
 
-        int[] GroupByColCounter = new int[9];
+        int[] GroupByColCounter = new int[8];
 
         int index = 0;
         //for loop to increment counters for each colour 
-        for (int i = 0; i<player.TrainCards.Count; i++)
+        for (int i = 0; i < player.TrainCards.Count; i++)
         {
-           
             if (player.TrainCards[i].cardColorString == "green")
             {
                 GroupByColCounter[index]++;
             }
-            if (player.TrainCards[i].IsLocomotive == true)
-            {
-                GroupByColCounter[index+1]++;
-            }
             if (player.TrainCards[i].cardColorString == "black")
             {
-                GroupByColCounter[index+2]++;
+                GroupByColCounter[index + 1]++;
             }
             if (player.TrainCards[i].cardColorString == "blue")
             {
-                GroupByColCounter[index+3]++;
+                GroupByColCounter[index + 2]++;
             }
             if (player.TrainCards[i].cardColorString == "orange")
             {
-                GroupByColCounter[index+4]++;
+                GroupByColCounter[index + 3]++;
             }
             if (player.TrainCards[i].cardColorString == "purple")
             {
-                GroupByColCounter[index+5]++;
+                GroupByColCounter[index + 4]++;
             }
             if (player.TrainCards[i].cardColorString == "white")
             {
-                GroupByColCounter[index+6]++;
+                GroupByColCounter[index + 5]++;
             }
             if (player.TrainCards[i].cardColorString == "red")
             {
-                GroupByColCounter[index+7]++;
+                GroupByColCounter[index + 6]++;
             }
             if (player.TrainCards[i].cardColorString == "yellow")
             {
-                GroupByColCounter[index+8]++;
+                GroupByColCounter[index + 7]++;
+            }
+            if (player.TrainCards[i].IsLocomotive == true)
+            {
+                GroupByColCounter[index]++;
+                GroupByColCounter[index + 1]++;
+                GroupByColCounter[index + 2]++;
+                GroupByColCounter[index + 3]++;
+                GroupByColCounter[index + 4]++;
+                GroupByColCounter[index + 5]++;
+                GroupByColCounter[index + 6]++;
+                GroupByColCounter[index + 7]++;
             }
 
-           
+
         }
 
-        
-        bool[] NumCardsToNode = new bool[9];
+
+        bool[] NumCardsToNode = new bool[8];
         Debug.Log("number of nodes: " + route.getNodes());
-        for (int i = 0; i<GroupByColCounter.Length; i++)
+        for (int i = 0; i < GroupByColCounter.Length; i++)
         {
             Debug.Log("number of cards of colour: " + GroupByColCounter[i]);
             if (route.getNodes() > GroupByColCounter[i])
@@ -96,19 +110,19 @@ public class RouteManager
 
                 NumCardsToNode[i] = false;
             }
-            else
+            else if (route.getNodes() <= GroupByColCounter[i])
             {
                 NumCardsToNode[i] = true;
             }
 
-       }
+        }
 
-        bool firstCheck = false;
-
-        for (int j = 0; j < player.TrainCards.Count ;j++)
+        for (int j = 0; j < GroupByColCounter.Length; j++)
         {
-            if(NumCardsToNode[j] == true)
+            if (NumCardsToNode[j] == true)
             {
+                Debug.Log("firstcheck is TRUE");
+
                 firstCheck = true;
             }
         }
@@ -116,21 +130,23 @@ public class RouteManager
         #endregion
 
         #region CheckColour
-        bool secondCheck = false;
 
-        for(int j = 0; j<player.TrainCards.Count; j++)
+
+        for (int j = 0; j < player.TrainCards.Count; j++)
         {
-            if(player.TrainCards[j].cardColorString == route.getColour())
+            if (player.TrainCards[j].cardColorString == route.getColour())
             {
+                Debug.Log("secondcheck is TRUE");
                 secondCheck = true;
             }
-            else if(route.getColour() == "grey" )
+            else if (route.getColour() == "grey")
             {
+                Debug.Log("secondcheck is TRUE");
                 secondCheck = true;
             }
             else
             {
-                return false;
+                Debug.Log("secondcheck is FALSE");
             }
         }
 
@@ -138,49 +154,85 @@ public class RouteManager
         #endregion
 
         #region CheckSingleDoubleRoute
-        bool thirdCheck = false;
+
 
         if (route.getNumRoutes() == 1)
         {
+            Debug.Log("thirdcheck is TRUE");
             thirdCheck = true;
-            route.isRouteClaimed(true);
+
         }
 
         if (route.getNumRoutes() == 2)
         {
-            if(player.ConnectedCities.Count == 0)
+            if (player.ConnectedCities.Count == 0)
             {
+                Debug.Log("thirdcheck is TRUE");
                 thirdCheck = true;
             }
 
             for (int i = 0; i < player.ConnectedCities.Count; i++)
             {
-                for (int j = 1; j < player.ConnectedCities.Count; j++)
+                for (int j = 0; j < player.ConnectedCities.Count; j++)
                 {
+
+                    Debug.Log("city at i in GL: " + GeneralList[i].getStart());
+                    Debug.Log("city at i in GL: " + GeneralList[i].getEnd());
+                    Debug.Log("ROUTE START: " + route.getStart());
+
                     if (GeneralList[i].getStart() == route.getStart() || GeneralList[i].getEnd() == route.getStart())
                     {
+                        Debug.Log("city at j in GL: " + GeneralList[j].getStart());
+                        Debug.Log("city at j in GL: " + GeneralList[j].getEnd());
+                        Debug.Log("ROUTE END: " + route.getEnd());
+
                         if (GeneralList[j].getEnd() == route.getEnd() || GeneralList[j].getStart() == route.getEnd())
                         {
                             //because these conditions are found to be true, it means one player has already claimed a double route 
+                            Debug.Log("third check is false");
                             thirdCheck = false;
+
                         }//end if j
                         else
                         {
                             thirdCheck = true;
-                            route.isRouteClaimed(true);
+
                         }
 
+
+
                     }//end if i
+
+                    thirdCheck = true;
+
                 }//end for j
             }//end for i
-        
+
         }
 
         #endregion
 
-        if (firstCheck == true && secondCheck == true && thirdCheck==true)
+        if (firstCheck == true && secondCheck == true && thirdCheck == true)
         {
-            //Routes.Add(route);//player's route list -- their city list is updated in gameplaycontroller
+
+            Debug.Log("All checks are TRUE");
+
+            //remove x amount of cards 
+            for (int i = 0; i < x; i++)//number of times card is removed is equal to num of nodes in route
+            {
+                for (int k = 0; k < player.TrainCards.Count; k++)
+                {
+                    if (player.TrainCards[k].cardColorString == route.getColour())//more than one colour
+                    {
+                        player.TrainCards.Remove(player.TrainCards[k]);//remove the train card at that position of the colour counter 
+                                                                       //this will happen x times which is equal to the number of nodes being claimed
+                    }
+                }
+
+
+            }
+
+            route.isRouteClaimed(true);
             return true;
         }
 
@@ -188,13 +240,14 @@ public class RouteManager
 
     }
 
+
     public List<RouteBase> ConnectedRoutes(Player p, RouteBase route)
     {
         List<RouteBase> connectedRoutes = new List<RouteBase>();
         int counterOfCitySet = 0;
-        for(int i =0; i<p.RoutesClaimed.Count ; i++)
+        for (int i = 0; i < p.RoutesClaimed.Count; i++)
         {
-            if(p.RoutesClaimed[i].getStart() == route.getStart() 
+            if (p.RoutesClaimed[i].getStart() == route.getStart()
                 || p.RoutesClaimed[i].getStart() == route.getEnd()
                 || p.RoutesClaimed[i].getEnd() == route.getStart()
                 || p.RoutesClaimed[i].getEnd() == route.getStart())//check all combinations where the start/end city of the
@@ -211,13 +264,20 @@ public class RouteManager
                 City tempEnd = new City();
                 int templength = 0;
 
-
-                for(int j = 0; j<p.RoutesClaimed.Count; j++)
+                for (int j = 1; j < p.RoutesClaimed.Count; j++)
                 {
+                    Debug.Log("city at i: " + connectCities[i] + " city at j: " + connectCities[j]);
+
                     if (connectCities[i] == connectCities[j])
                     {
                         tempShared = connectCities[i];
                         connectCities.Remove(connectCities[i]);//take out a repeated city so that if two routes are connected only 3 cities are added not 4
+
+                        while (tempEnd != tempShared)
+                        {
+                            tempEnd = connectCities[j];
+                        }
+
                         counterOfCitySet++;
                     }
                     else
@@ -234,11 +294,12 @@ public class RouteManager
                 length = length + newRoute.getNodes();
                 Debug.Log("sum of routes at i:" + length);
             }
-            
+
         }
 
         return connectedRoutes;
     }
+
 
     public bool DestinationTicketAcheived(Player p, List<RouteBase> routelist)
     {
@@ -255,48 +316,27 @@ public class RouteManager
         return false;
     }
 
-    public int getLongestRoute(Player player)
-    {
-        GameController obj = new GameController();
-
-        Player highestPlayer;
-        int highestVal = 0;
-
-        foreach (Player p in obj.players)
-        {
-            int routeCheck = getLongestRoute(player);
-            if (highestVal < routeCheck)
-            {
-                highestVal = routeCheck;
-                highestPlayer = player;
-                return highestVal;
-            }
-        }
-
-        return 0;
-    }
-
+  
     public void longestRouteCalculated(List<RouteBase> connected)
     {
         List<List<RouteBase>> connectList = new List<List<RouteBase>>();
         //connected is the list after the checkconnectroutes method is called
-        
+
         int sum = 0;
         int tempsum = 0;
-       
 
-        for(int i = 0; i<connectList.Count; i++)
+        for (int i = 0; i < connectList.Count; i++)
         {
             connectList.Add(connected);
 
-            for(int j = 0; j<connected.Count; j++)
+            for (int j = 0; j < connected.Count; j++)
             {
                 RouteBase temproute = connected[j];
                 sum = sum + temproute.getNodes();
             }
 
         }
-       
+
 
     }
 

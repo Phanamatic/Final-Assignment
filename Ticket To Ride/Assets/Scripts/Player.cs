@@ -49,18 +49,17 @@ public class Player
 
     public int CalculateScore()
     {
-        int score = 0;
-
         // Calculate the score based on the player's actions and achievements
         // You can assign different point values to various actions or achievements
 
         // Example: Increase score for completing routes
         foreach (RouteBase routeclaimed in RoutesClaimed)
         {
-            score += routeclaimed.points();
+            Score += routeclaimed.points();
         }
 
-        return score;
+        return Score;
+
     }
 
     public int CalculateFinalScore()
@@ -81,6 +80,16 @@ public class Player
         }
 
         return 0;
+    }
+
+    public int RemoveTrainCars()
+    {
+        foreach (RouteBase route in RoutesClaimed)
+        {
+            TrainCarsLeft = TrainCarsLeft - route.getNodes();
+        }
+
+        return TrainCarsLeft;
     }
 
 
