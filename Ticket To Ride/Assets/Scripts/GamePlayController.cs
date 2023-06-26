@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.UI;
+
 
 
 public class GamePlayController : MonoBehaviour
@@ -36,7 +38,7 @@ public class GamePlayController : MonoBehaviour
     public List<RouteBase> data = new List<RouteBase>();
     
 
-    public GameObject routechoosedropdown;
+    public GameObject routechoosedropdown; 
     public GameObject claimroutebutton;
 
     public TMP_Text scoreText;
@@ -55,6 +57,10 @@ public class GamePlayController : MonoBehaviour
     public Button trainDrawTurnButton;
 
     public Button endTurnButton;
+
+    List<RouteBase> possibleRoutes = new List<RouteBase>();
+
+    public Button claimRouteButton;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +90,10 @@ public class GamePlayController : MonoBehaviour
     private void Update()
     {
         UpdateDeckButton();
+
+        Player current = players[currentPlayerIndex];
+
+        claimRouteButton.interactable = AreThereClaimableRoutes(current);
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -342,20 +352,55 @@ public class GamePlayController : MonoBehaviour
 
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
 
     public void ClaimRoute()
     {
-        routechoosedropdown.SetActive(false);
-        claimroutebutton.SetActive(false);
+    Player current = players[currentPlayerIndex];
+    int index = dropDown.value;
 
-        DropDownItemSelected(dropDown);
-        dropDown.onValueChanged.AddListener(delegate { DropDownItemSelected(dropDown); });
+    bool claim = obj.ClaimRoute(data[index], current);
+    Debug.Log(claim + " " + "RouteName:" + data[index].getRouteName());
 
+    if (claim)
+    {
+        current.RoutesClaimed.Add(data[index]);
+        current.RoutesConnectedClaimed = obj.ConnectedRoutes(current, data[index]);
+        bool destn = obj.DestinationTicketAcheived(current, current.RoutesConnectedClaimed);
 
+        UpdateScoreUI(current);
+        UpdateTrainCars(current);
+
+        current.ConnectedCities.Add(data[index].getStart());
+        current.ConnectedCities.Add(data[index].getEnd());
+
+        obj.GeneralList.Add(data[index]);
+
+        data.Remove(data[index]); // Remove from dropdown list when a route is claimed 
+
+        // Update dropDown options
+        dropDown.ClearOptions();
+        List<string> options = new List<string>();
+        foreach (RouteBase route in data) 
+        {
+            options.Add(route.getRouteName());
+        }
+        dropDown.AddOptions(options);
+
+        NextTurn();
     }
-    void DropDownItemSelected(TMP_Dropdown dropdown)
+    else
+    {
+        NextTurn();
+    }
+    }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*void DropDownItemSelected(TMP_Dropdown dropdown)
     {
         Player current = players[currentPlayerIndex];
 
@@ -392,7 +437,7 @@ public class GamePlayController : MonoBehaviour
             NextTurn();
         }
 
-    }
+    }*/
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -624,30 +669,77 @@ public class GamePlayController : MonoBehaviour
 
     public void RouteClaimChosen()
     {
+    routechoosedropdown.SetActive(true);
+    claimroutebutton.SetActive(true);
+    actionPanel.SetActive(false);
 
-        routechoosedropdown.SetActive(true);
+    dropDown = dropDown.transform.GetComponent<TMP_Dropdown>();
+    dropDown.ClearOptions();
 
-        claimroutebutton.SetActive(true);
+    Player current = players[currentPlayerIndex];
 
-        actionPanel.SetActive(false);
+    // Get the list of possible routes the player can claim
+    List<RouteBase> possibleRoutes = GetPossibleRoutesForPlayer(current);
 
+    // Populate the dropdown with the possible routes
+    foreach (RouteBase route in possibleRoutes)
+    {
+        dropDown.options.Add(new TMP_Dropdown.OptionData() { text = route.getRouteName() + " ----- " + route.getColour() });
+    }
 
-        dropDown = dropDown.transform.GetComponent<TMP_Dropdown>();
+    data.Clear();
 
-        dropDown.ClearOptions();
-
-        for (int i = 0; i < board.Routes.GeneralList.Count; i++)
+    // Populate the data list with possible routes
+    foreach (RouteBase route in board.Routes.GeneralList)
+    {
+        if (CanPlayerClaimRoute(current, route))
         {
-            data.Add(board.Routes.GeneralList[i]);
+            data.Add(route);
+            dropDown.options.Add(new TMP_Dropdown.OptionData() { text = route.getRouteName() + " ----- " + route.getColour() });
         }
+    }
+    }
 
-        foreach (RouteBase t in data)
+
+    private List<RouteBase> GetPossibleRoutesForPlayer(Player player)
+{
+    List<RouteBase> possibleRoutes = new List<RouteBase>();
+
+    // Loop through all the routes on the board
+    for (int i = 0; i < board.Routes.GeneralList.Count; i++)
+    {
+        RouteBase route = board.Routes.GeneralList[i];
+
+        // Check if the player has enough train cars to claim the route
+    if (player.TrainCarsLeft >= route.getNodes())
+    {
+    // Check if the player has the necessary train cards to claim the route
+    int colorCardCount = 0;
+    int locomotiveCount = 0;
+    foreach (TrainCard card in player.TrainCards)
+    {
+        if (card.cardColorString == route.getColour())
         {
-            dropDown.options.Add(new TMP_Dropdown.OptionData() { text = t.getRouteName() + " ----- " + t.getColour() });
+            colorCardCount++;
         }
+        else if (card.IsLocomotive)
+        {
+            locomotiveCount++;
+        }
+    }
 
+    // Check if the player has enough cards of the required color or locomotives to claim the route
+    if (colorCardCount >= route.getNodes() || (colorCardCount + locomotiveCount) >= route.getNodes())
+    {
+        // If the player can claim the route, add it to the list of possible routes
+        possibleRoutes.Add(route);
+    }
+    }
 
     }
+
+    return possibleRoutes;
+}
 
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
@@ -764,5 +856,74 @@ public class GamePlayController : MonoBehaviour
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private bool CanPlayerClaimRoute(Player player, RouteBase route)
+    {
+    // Check if the player has enough train cars to claim the route
+    if (player.TrainCarsLeft < route.getNodes())
+    {
+        return false;
+    }
+
+    // Check if the player has the necessary train cards to claim the route
+    int colorCardCount = 0;
+    int locomotiveCount = 0;
+    foreach (TrainCard card in player.TrainCards)
+    {
+        if (card.cardColorString == route.getColour())
+        {
+            colorCardCount++;
+        }
+        else if (card.IsLocomotive)
+        {
+            locomotiveCount++;
+        }
+    }
+
+    // Check if the player has enough cards of the required color or locomotives to claim the route
+    if (colorCardCount >= route.getNodes() || (colorCardCount + locomotiveCount) >= route.getNodes())
+    {
+        return true;
+    }
+
+    return false;
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+private void UpdateClaimButtonStatus(Player player, List<RouteBase> allRoutes)
+{
+    bool canClaimAnyRoute = false;
+    
+    foreach (RouteBase route in allRoutes)
+    {
+        if (CanPlayerClaimRoute(player, route))
+        {
+            canClaimAnyRoute = true;
+            break;  // No need to check further, we found at least one route the player can claim
+        }
+    }
+    
+    // Assuming claimButton is your button component
+    claimRouteButton.interactable = canClaimAnyRoute;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+private bool AreThereClaimableRoutes(Player player)
+    {
+        foreach (var route in data)
+        {
+            if (CanPlayerClaimRoute(player, route))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }
 

@@ -8,7 +8,6 @@ public class RouteManager
     public List<RouteBase> Routes = new List<RouteBase>();
     public List<RouteBase> GeneralList = new List<RouteBase>();
 
-    private CityManager cityobj;
     public void AddRoute(City s, City e, string c, int l, int n, string name)
     {
         //Routes.Add(new RouteBase(s, e, c, l, n, name));
@@ -18,7 +17,7 @@ public class RouteManager
     public void RemoveRoute(City s, City e, string c, int l, int n, string name)
     {
         //Routes.Remove(new RouteBase(s, e, c,  l, n, name));
-        GeneralList.Add(new RouteBase(s, e, c, l, n, name));
+        GeneralList.Remove(new RouteBase(s, e, c, l, n, name));
     }
 
     public bool ClaimRoute(RouteBase route, Player player)//add a player parameter as well and a traincard colour
