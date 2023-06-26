@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
 
 
 public class GamePlayController : MonoBehaviour
@@ -51,9 +50,6 @@ public class GamePlayController : MonoBehaviour
     public Button drawDestinationButton;
 
     public TMPro.TextMeshProUGUI deckCountText;
-    public Button trainDrawTurnButton;
-
-    public Button endTurnButton;
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,13 +72,6 @@ public class GamePlayController : MonoBehaviour
     private void Start() 
     {
     StartGame();
-    }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private void Update()
-    {
-        UpdateDeckButton();
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +99,6 @@ public class GamePlayController : MonoBehaviour
         Debug.Log("Current player index after update: " + currentPlayerIndex);
         
         UpdateCardButtons();
-        UpdateDeckButton();
 
         for (int i = 0; i < cardManager.OfferPile.Count; i++)
         {
@@ -119,7 +107,6 @@ public class GamePlayController : MonoBehaviour
 
         drawTrainCardButtons.SetActive(false);
 
-        UpdateDeckCountText();
         UpdateTurnUI();
         playerHandUIController.UpdatePlayerHandUI(players[currentPlayerIndex]);
 
@@ -170,12 +157,17 @@ public class GamePlayController : MonoBehaviour
 
     public void DrawTrainCard()
     {
+        if (cardManager.trainCardDeck.IsEmpty())
+        {
+        emptyTrainDeckPanel.SetActive(true);
+        return;
+        }
+
         players[currentPlayerIndex].HasDrawnFirstCard = false;
         players[currentPlayerIndex].DrawsLeft = 2;
         actionPanel.SetActive(false); 
         drawTrainCardButtons.SetActive(true);
         UpdateCardButtons();
-        drawTrainButton.interactable = (cardManager.trainCardDeck.Count > 0);
 
         Debug.Log("DrawTrainCard method in GamePlayController called");
 
@@ -189,8 +181,6 @@ public class GamePlayController : MonoBehaviour
     UpdateDeckCountText();
     players[currentPlayerIndex].AddTrainCard(drawnCard);
     players[currentPlayerIndex].DrawsLeft--;
-
-    UpdateDeckButton();
 
     playerHandUIController.UpdatePlayerHandUI(players[currentPlayerIndex]);
 
@@ -209,30 +199,13 @@ public class GamePlayController : MonoBehaviour
 
     public void DrawCardFromOffer(int offerIndex)
     {
-        TrainCard offerCard = cardManager.TakeFromOffer(offerIndex);
-        if (offerCard == null)
-        {
-        offerCardButtons[offerIndex].gameObject.SetActive(false);
-        offerCardImages[offerIndex].gameObject.SetActive(false);
-        return;
-        }
+    TrainCard offerCard = cardManager.TakeFromOffer(offerIndex);
+    
 
-        // Check if the offer card was replaced. If not, disable its button.
-        if (cardManager.OfferPile[offerIndex] == null)
-        {
-        offerCardButtons[offerIndex].gameObject.SetActive(false);
-        }
-
-        if (offerCard == null)
-        {
-        offerCardButtons[offerIndex].gameObject.SetActive(false);
-        offerCardImages[offerIndex].gameObject.SetActive(false);
-        return;
-        }
 
     Sprite oldImage = offerCardImages[offerIndex].sprite;
 
-    Sprite newImage = cardManager.OfferPile[offerIndex]?.image;
+    Sprite newImage = cardManager.OfferPile[offerIndex].image;
 
     playerHandUIController.UpdatePlayerHandUI(players[currentPlayerIndex]);
 
@@ -243,9 +216,6 @@ public class GamePlayController : MonoBehaviour
 
     playerHandUIController.UpdatePlayerHandUI(players[currentPlayerIndex]);
 
-    UpdateDeckButton();
-    UpdateCardButtons();
-    UpdateDeckCountText();
 
     if ((offerCard.IsLocomotive && !players[currentPlayerIndex].HasDrawnFirstCard) || players[currentPlayerIndex].DrawsLeft == 0)
     {
@@ -265,18 +235,16 @@ public class GamePlayController : MonoBehaviour
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void UpdateCardButtons()
-    {   
+    {
     bool hasDrawnFirstCard = players[currentPlayerIndex].HasDrawnFirstCard;
     for (int i = 0; i < cardManager.OfferPile.Count; i++)
     {
-        bool isLocomotive = cardManager.OfferPile[i]?.IsLocomotive ?? false;
-        offerCardButtons[i].gameObject.SetActive(cardManager.OfferPile[i] != null);
+        bool isLocomotive = cardManager.OfferPile[i].IsLocomotive;
+        offerCardButtons[i].gameObject.SetActive(true);
         offerCardButtons[i].interactable = !hasDrawnFirstCard || !isLocomotive;
     }
-    drawTrainButton.interactable = players[currentPlayerIndex].DrawsLeft > 0;
-    UpdateDeckCountText();
+    drawTrainCardButtons.SetActive(players[currentPlayerIndex].DrawsLeft > 0);
     }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -396,17 +364,9 @@ public class GamePlayController : MonoBehaviour
     {    
     for (int i = 0; i < cardManager.OfferPile.Count; i++)
     {
-        if (cardManager.OfferPile[i] != null)
-        {
-            offerCardImages[i].sprite = cardManager.OfferPile[i].image;
-        }
-        else
-        {
-            offerCardImages[i].gameObject.SetActive(false);
-        }
+        offerCardImages[i].sprite = cardManager.OfferPile[i].image;
     }
     }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -703,18 +663,6 @@ public class GamePlayController : MonoBehaviour
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void UpdateDeckButton() 
-    {
-    drawTrainButton.interactable = !cardManager.trainCardDeck.IsEmpty();
-
-    bool shouldDrawButtonBeInteractable = cardManager.trainCardDeck.Count > 0 ||cardManager.OfferPile.Any(card => card != null);
-    trainDrawTurnButton.interactable = shouldDrawButtonBeInteractable;
-
-    bool shouldEndButtonBeActive = players[currentPlayerIndex].HasDrawnFirstCard && !shouldDrawButtonBeInteractable;
-    endTurnButton.gameObject.SetActive(shouldEndButtonBeActive);
-    }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+
 

@@ -33,19 +33,30 @@ public class CardDeck<T> where T : ScriptableObject
 
     public T DrawCard()
     {
-        if (cards.Count == 0)
-        {
-            Debug.LogError("Deck is empty. Cannot draw card.");
-            return null;
-        }
-
-        T drawnCard = cards[0];
-        cards.RemoveAt(0);
-        return drawnCard;
+    if (cards.Count == 0)
+    {
+        Debug.LogError("Deck is empty. Cannot draw card.");
+        return null;
     }
+
+    T drawnCard = cards[0];
+    cards.RemoveAt(0);
+    return drawnCard;
+    }
+
 
     public int Count
     {
         get { return cards.Count; }
+    }
+
+    public bool IsEmpty()
+    {
+    return cards.Count == 0;
+    }
+
+     public void PutCardBack(T card)
+    {
+        cards.Add(card);
     }
 }

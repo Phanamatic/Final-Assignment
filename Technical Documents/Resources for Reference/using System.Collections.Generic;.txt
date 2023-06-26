@@ -60,30 +60,20 @@ public class CardManager : MonoBehaviour
 
     public TrainCard TakeFromOffer(int offerIndex)
     {
-    TrainCard card = OfferPile[offerIndex];
-    TrainCard newCard = trainCardDeck.DrawCard();
-    if (newCard != null)
-    {
-        OfferPile[offerIndex] = newCard;
+        TrainCard card = OfferPile[offerIndex];
+        OfferPile[offerIndex] = trainCardDeck.DrawCard();
+        gamePlayController.UpdateDeckCountText();
+
+        CheckAndReplaceOfferPile();
+        gamePlayController.PopulateOfferCards();
+        return card;
     }
-    else
-    {
-        OfferPile[offerIndex] = null;
-    }
-
-    CheckAndReplaceOfferPile();
-    gamePlayController.PopulateOfferCards();
-    return card;
-    }
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void CheckAndReplaceOfferPile()
     {
-    if (OfferPile.Count(card => card != null && card.IsLocomotive) >= 3)
+    if (OfferPile.Count(card => card.IsLocomotive) >= 3)
     {
         for (int i = 0; i < OfferSize; i++)
         {
