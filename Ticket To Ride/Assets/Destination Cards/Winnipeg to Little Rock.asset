@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Winnipeg
   endCity: Little Rock
   points: 11
-  image: {fileID: 21300000, guid: 033b04020dff5154d99ca4876103aa46, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

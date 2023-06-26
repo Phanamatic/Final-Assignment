@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Denver
   endCity: Pittsburgh
   points: 11
-  image: {fileID: 21300000, guid: e235a2fa3400e5c4584b30b131f69db1, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

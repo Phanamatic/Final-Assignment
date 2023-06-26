@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Duluth
   endCity: Houston
   points: 8
-  image: {fileID: 21300000, guid: 738855225c1bf28479d239d166e6c873, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

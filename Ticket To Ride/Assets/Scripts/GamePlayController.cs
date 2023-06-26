@@ -40,6 +40,11 @@ public class GamePlayController : MonoBehaviour
 
     public TMP_Text scoreText;
 
+    public TextMeshProUGUI[] startCityTexts;
+    public TextMeshProUGUI[] endCityTexts;
+    public TextMeshProUGUI[] pointsTexts;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void Awake()
@@ -244,6 +249,10 @@ public class GamePlayController : MonoBehaviour
         destinationCardChoiceImages[i].sprite = card.image; 
         destinationCardChoiceButtons[i].gameObject.SetActive(true);
         destinationCardChoiceButtons[i].interactable = true;
+
+        startCityTexts[i].text = card.startCity;
+        endCityTexts[i].text = card.endCity;
+        pointsTexts[i].text = card.points.ToString();
     }
     }
 
@@ -399,6 +408,10 @@ public class GamePlayController : MonoBehaviour
         destinationCardChoiceImages[i].sprite = card.image; 
         destinationCardChoiceButtons[i].gameObject.SetActive(true);
         destinationCardChoiceButtons[i].interactable = true;
+
+        startCityTexts[i].text = card.startCity;
+        endCityTexts[i].text = card.endCity;
+        pointsTexts[i].text = card.points.ToString();
     }
 
     destinationCardChoicePanel.SetActive(true);
@@ -430,6 +443,7 @@ public class GamePlayController : MonoBehaviour
     players[currentPlayerIndex].hasFinishedInitialTurn = true;
     }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void OnDestinationCardChoiceConfirmationPromptYes()
     {
@@ -479,6 +493,10 @@ public class GamePlayController : MonoBehaviour
         {
             destinationCardChoiceButtons[i].interactable = true;
             destinationCardChoiceImages[i].sprite = offeredDestinationCards[i].image;
+
+            startCityTexts[i].text = offeredDestinationCards[i].startCity;
+            endCityTexts[i].text = offeredDestinationCards[i].endCity;
+            pointsTexts[i].text = offeredDestinationCards[i].points.ToString();
         }
     }
 
@@ -541,7 +559,6 @@ public class GamePlayController : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             player.AddTrainCard(cardManager.trainCardDeck.DrawCard());
-            RouteClaimChosen();
         }
     }
         

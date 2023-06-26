@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Portland
   endCity: Nashville
   points: 17
-  image: {fileID: 21300000, guid: 72aaea7bd26218041b4d0e72d3838ab5, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

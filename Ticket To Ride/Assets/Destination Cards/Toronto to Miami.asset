@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Toronto
   endCity: Miami
   points: 10
-  image: {fileID: 21300000, guid: c5f2bed4b1fc8534e8024fc56d33e242, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Seattle
   endCity: New York
   points: 22
-  image: {fileID: 21300000, guid: 423add5eba5342c43809efdb29e939bc, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

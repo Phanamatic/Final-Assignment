@@ -16,4 +16,4 @@ MonoBehaviour:
   cardColor: {r: 0, g: 0, b: 0, a: 0}
   cardColorString: red
   count: 12
-  image: {fileID: 21300000, guid: cb32c729997d87e42b44e803e96714d3, type: 3}
+  image: {fileID: 21300000, guid: 4f08a73620f1d3b43a748dd914fb147b, type: 3}

@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: San Francisco
   endCity: Atlanta
   points: 17
-  image: {fileID: 21300000, guid: de18e47b74d14b64abe406b9add2f9fa, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

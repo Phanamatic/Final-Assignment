@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Winnipeg
   endCity: Houston
   points: 12
-  image: {fileID: 21300000, guid: 1c025b0ef460bbb468db83f279b021ee, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

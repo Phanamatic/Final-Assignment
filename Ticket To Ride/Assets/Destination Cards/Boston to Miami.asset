@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Boston
   endCity: Miami
   points: 12
-  image: {fileID: 21300000, guid: fd811a9a9e946974d9af764eb67109e4, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

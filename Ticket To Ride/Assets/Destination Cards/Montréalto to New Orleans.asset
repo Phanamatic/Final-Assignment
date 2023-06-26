@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Montrealto
   endCity: New Orleans
   points: 13
-  image: {fileID: 21300000, guid: 45c609330ff6e0447bcffa3347152f66, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

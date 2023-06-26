@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Dallas
   endCity: New York
   points: 11
-  image: {fileID: 21300000, guid: 674371af38a671c4f8f239b075699108, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}

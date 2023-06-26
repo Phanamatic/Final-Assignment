@@ -15,4 +15,4 @@ MonoBehaviour:
   startCity: Chicago
   endCity: New Orleans
   points: 7
-  image: {fileID: 21300000, guid: b84f3ac01e411e3418e0cd7594b95351, type: 3}
+  image: {fileID: 21300000, guid: cf1bfeae4cacda14a8adfe8b46fb43e5, type: 3}
